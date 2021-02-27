@@ -79,12 +79,57 @@ Public Class EPQ
 
             If File_Extension = "world" Then
 
-                List_Worlds.Add(World.FromFile(PathName, List_Models))
-
+                'List_Worlds.Add(World.FromFile(PathName, List_Models))
+                List_Worlds.Add(gentestworld("yellowcube", List_Models))
             End If
         Next
     End Sub
 
+    Private Function gentestworld(ByVal model_name As String, List_Models As List(Of Model)) As World
+
+        'line 0 world name
+        Dim Name As String = "test"
+        Dim list_objects As New List(Of Game_Object)
+        Dim cam As Game_Camera
+
+        Dim model_index As Integer = World.Search_Models(model_name, List_Models)
+        Dim model As Model = List_Models(model_index)
+
+        Dim position As VEC3
+        Dim rotation As VEC3
+        Dim scale As VEC3
+
+        'cube
+        Dim i As Integer = 0
+        For x = 1 To 20
+            For y = 1 To 20
+                For z = 1 To 20
+                    position.X = x
+                    position.Y = y
+                    position.Z = z
+                    rotation = VEC3.Parse("0 0 0")
+                    scale = VEC3.Parse("1 1 1")
+
+                    list_objects.Add(New Game_Object(model,
+                                                     position,
+                                                     rotation,
+                                                     scale))
+
+                    'camera = center
+                    If x = 10 And y = 10 And z = 10 Then
+                        'set camera to first obj
+                        cam = New Game_Camera(list_objects(i), 0)
+                    End If
+
+                    i += 1
+                Next
+            Next
+        Next
+
+        Return New World(cam,
+                         list_objects,
+                         0.8)
+    End Function
 #End Region
 
 #Region "Keyboard"
