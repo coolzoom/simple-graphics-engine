@@ -78,7 +78,11 @@
     Shared Function FromFile(ByVal PathName As String, ByRef List_Textures As List(Of Texture)) As Model
         Dim SR As New IO.StreamReader(PathName)
         'opens up a stream that can be used to read in lines of the text file.
+
+        'line 0 model name
         Dim Name As String = SR.ReadLine
+
+        'line 1 triangle type
         Dim Type As Triangle_Type = CType([Enum].Parse(GetType(Triangle_Type), SR.ReadLine), Triangle_Type)
         '0 = coloured, 1 = textured
 

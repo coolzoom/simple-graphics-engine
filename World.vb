@@ -28,6 +28,7 @@
                              ByRef List_Models As List(Of Model)) As World
         Dim SR As New IO.StreamReader(PathName)
 
+        'line 0 world name
         Dim Name As String = SR.ReadLine
         Dim list_objects As New List(Of Game_Object)
         Dim cam As Game_Camera
@@ -40,7 +41,7 @@
         Dim rotation As VEC3
         Dim scale As VEC3
 
-        For i As Integer = 0 To SR.ReadLine - 1 'Add objects
+        For i As Integer = 0 To SR.ReadLine - 1 'line 1 number of objects, Add objects
             model_name = SR.ReadLine
             model_index = Search_Models(model_name, List_Models)
 
@@ -59,6 +60,7 @@
                                              rotation,
                                              scale))
             If i = 0 Then
+                'set camera to first obj
                 cam = New Game_Camera(list_objects(i), 0)
             End If
         Next
