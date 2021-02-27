@@ -80,12 +80,54 @@ Public Class EPQ
             If File_Extension = "world" Then
 
                 'List_Worlds.Add(World.FromFile(PathName, List_Models))
-                List_Worlds.Add(gentestworld("yellowcube", List_Models))
+                'List_Worlds.Add(GenTestWorld("yellowcube", List_Models))
+                List_Worlds.Add(GenTestWorldFromFile("../../resources/Worlds/test.txt", "yellowcube", List_Models))
             End If
         Next
     End Sub
 
-    Private Function gentestworld(ByVal model_name As String, List_Models As List(Of Model)) As World
+    Private Function GenTestWorldFromFile(ByVal filename As String, ByVal model_name As String, List_Models As List(Of Model)) As World
+
+        'line 0 world name
+        Dim Name As String = "test"
+        Dim list_objects As New List(Of Game_Object)
+        Dim cam As Game_Camera
+
+        Dim model_index As Integer = World.Search_Models(model_name, List_Models)
+        Dim model As Model = List_Models(model_index)
+
+        Dim position As VEC3
+        Dim rotation As VEC3
+        Dim scale As VEC3
+
+        'points
+        Dim arrcontent As String() = IO.File.ReadAllLines(filename)
+
+        Dim i As Integer = 0
+        For i = 0 To arrcontent.Count - 1
+            position = VEC3.Parse(arrcontent(i))
+            rotation = VEC3.Parse("0 0 0")
+            scale = VEC3.Parse("1 1 1")
+
+            list_objects.Add(New Game_Object(model,
+                                             position,
+                                             rotation,
+                                             scale))
+
+            'camera = center
+            If i = Int(arrcontent.Count / 2) Then
+                'set camera to first obj
+                cam = New Game_Camera(list_objects(i), 0)
+            End If
+        Next
+
+
+        Return New World(cam,
+                         list_objects,
+                         0.8)
+    End Function
+
+    Private Function GenTestWorld(ByVal model_name As String, List_Models As List(Of Model)) As World
 
         'line 0 world name
         Dim Name As String = "test"
@@ -101,9 +143,9 @@ Public Class EPQ
 
         'cube
         Dim i As Integer = 0
-        For x = 1 To 20
-            For y = 1 To 20
-                For z = 1 To 20
+        For x = 1 To 100 Step 2
+            For y = 1 To 100 Step 2
+                For z = 1 To 1
                     position.X = x
                     position.Y = y
                     position.Z = z
@@ -116,7 +158,7 @@ Public Class EPQ
                                                      scale))
 
                     'camera = center
-                    If x = 10 And y = 10 And z = 10 Then
+                    If x = 1 And y = 1 And z = 1 Then
                         'set camera to first obj
                         cam = New Game_Camera(list_objects(i), 0)
                     End If
@@ -172,7 +214,7 @@ Public Class EPQ
     End Class
 
     Private Sub PB_mousescroll(ByVal sender As System.Object, ByVal e As MouseEventArgs) Handles Me.MouseWheel
-        List_Worlds(Current_World).Camera.ChangeDistance(-e.Delta() * 0.003)
+        List_Worlds(Current_World).Camera.ChangeDistance(-e.Delta() * 0.3)
     End Sub
 
     Private Sub PB_mousemove(ByVal sender As System.Object, ByVal e As MouseEventArgs) Handles PB.MouseMove

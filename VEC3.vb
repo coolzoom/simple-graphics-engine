@@ -105,6 +105,8 @@
             dv = str.Split(","c)
         ElseIf str.Contains(" ") Then
             dv = str.Split(" "c)
+        ElseIf str.Contains(vbtab) Then
+            dv = str.Split(vbTab)
         End If
         If dv.Count = 3 Then
             v = New VEC3(CDbl(dv(0)), CDbl(dv(1)), CDbl(dv(2)))
